@@ -22,41 +22,29 @@ This project is an end-to-end implementation of a functional 8-bit microprocesso
 | **Instruction Set** | Custom RISC-like 8-bit ISA (Fetch-Decode-Execute pipeline) |
 
 ---
+```mermaid
+graph TD
+    subgraph Control & Timing
+        Clock[Clock Module] --> CU[Control Unit / Microcode EEPROMs]
+        CU -->|Control Lines| Bus
+    end
 
-## System Block Diagram
+    subgraph Shared Bus
+        Bus[8-Bit Shared Data Bus]
+    end
 
-+-----------------------------------+
-          |          CONTROL UNIT (CU)        |
-          |   (Microcode EEPROMs / Decoders)  |
-          +--+-----+-----+-----+-----+-----+--+
-             |     |     |     |     |     |  (Control Lines)
-             v     v     v     v     v     v
-          +-----------------------------------+
-          |          SHARED DATA BUS          |
-          +--+-----+-----+-----+-----+-----+--+
-             |     |     |     |     |     |
-+------------+     |     |     |     |     +------------+
-|                  v     |     v     v                  |
-v               +----+   |   +----+----+                v
-+-------+           | MAR|   |   | PC |   |              +------+
-| Clock |           +--+-+   |   +--+-+   |              | Output|
-+-------+              |     |      |     |              | Reg  |
-v     v      v     |              +------+
-+----------+ +-----+  |
-|   RAM    | | CIR |  |
-+----+-----+ +--+--+  |
-|          |     |
-v          v     |
-+----+----+  (Opcode) |
-|   MDR   |-----+     |
-+----+----+           |
-|                |
-+-------+--------+
-|
-v
-+------------------+
-|  ALU / Accumulator|
-+------------------+
+    subgraph Registers & Processing
+        PC[Program Counter] -->|Address / Data| Bus
+        MAR[Memory Address Register] --> RAM[RAM Module]
+        RAM --> MDR[Memory Data Register]
+        MDR --> Bus
+        CIR[Current Instruction Register] -->|Opcode| CU
+        Bus --> CIR
+        Bus --> ACC[Accumulator & ALU]
+        ACC -->|Result / Flags| Bus
+        Out[Output Register / Display] --> Bus
+    end
+```
 ---
 
 ## Modular Subsystem Hierarchy
