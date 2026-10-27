@@ -16,4 +16,5 @@ graph TD
     HaltLine[CPU Halt Signal] -->|Active LOW/HIGH| D
     D --> E[CLK Signal Out]
     D --> F[74HC04 Inverter]
-    F --> G[~CLK Signal Out]
+    F --> G[~CLK Signal Out]# Module 01: Clock Generator & Timing Unit
+
