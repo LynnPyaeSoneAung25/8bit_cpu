@@ -1,0 +1,19 @@
+# Module 01: Clock Generator & Timing Unit
+
+The primary timing and synchronization engine for the 8-bit breadboard CPU. This module provides glitch-free clock pulses (`CLK` and `~CLK`) and orchestrates execution flow across all system registers.
+
+![Clock Module Demo](media/manual-pulse-demo.gif)
+
+## Functional Overview
+
+The clock module acts as the "heartbeat" of the Von Neumann architecture. To support both high-speed automated instruction execution and precise low-level hardware debugging, the module implements **three distinct operational modes** selectable via an onboard hardware switch.
+
+```mermaid
+graph TD
+    A[Astable 555 Oscillator <br> 1 Hz - 1 kHz] -->|Free-Running| C[74HC157 Quad 2-to-1 Multiplexer]
+    B[Bistable 555 Latch <br> Manual Step Push-Button] -->|Single-Step| C
+    C --> D[74HC08 AND Gate <br> Halt Gating]
+    HaltLine[CPU Halt Signal] -->|Active LOW/HIGH| D
+    D --> E[CLK Signal Out]
+    D --> F[74HC04 Inverter]
+    F --> G[~CLK Signal Out]
