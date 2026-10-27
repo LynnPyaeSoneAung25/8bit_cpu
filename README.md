@@ -1,27 +1,62 @@
-# 8bit_cpu
-An 8-bit Von Neumann computer made with CD40 logic gates, with custom microcoded control unit and software assembler.
+# 8-Bit Discrete Logic Microprocessor Architecture
 
-# Architecture
-
-An 8-bit Von Neumann computer designed and built from discrete CD40-series logic gates on breadboards, eiyh a custom microcoded control unit and integrated software toolchain.
+An 8-bit Von Neumann computer designed and built from discrete 74HC-series logic gates on breadboards, featuring a custom microcoded control unit and integrated software toolchain.
 
 ![CPU Overview](modules/01-clock/media/manual-pulse-demo.gif)
 
-## Summary
-This project is an end-to-end implementation of a functional 8-bit microprocessor built from basic logic components. Designed around a shared 8-bit parallel bus, the architecture features dedicated registers, an Arithmetic Logic Unit (ALU) capable of Two's Complement arithmetic, an EEPROM-based microcoded Control Unit, and custom software tooling for code assembly and hardware simulation.
+## Executive Summary
+This project is an end-to-end implementation of a functional 8-bit microprocessor built completely from basic logic components. Designed around a shared 8-bit parallel bus, the architecture features dedicated registers, an Arithmetic Logic Unit (ALU) capable of Two's Complement arithmetic, an EEPROM-based microcoded Control Unit, and custom software tooling for code assembly and hardware simulation.
 
-## Specifications & Architecture
+---
 
-| Parameter         | Specification |
-| :---              | :---                                                                         |
-| Architecture Type | Von Neumann (Unified Instruction & Data Memory)                              |
-| Data Bus Width    | 8-bit parallel, tri-state buffered (74HC245)                                 |
-| Address Space     | 8-bit addressing (up to 256 memory locations)                                |
-| Clock Modes       | Manual Single-Step (Debounced) / Free-Running (1 Hz – 1 kHz) / Hardware Halt |
-| Logic Family      | High-Speed CMOS (74HC Series)                                                |
-| Control Logic     | Microcoded via parallel EEPROMs (AT28C16 / AT28C64)                          |
-| Instruction Set   | Custom RISC-like 8-bit ISA (Fetch-Decode-Execute pipeline)                   |
+## Technical Specifications & Architecture
 
+| Parameter | Specification |
+| :--- | :--- |
+| **Architecture Type** | Von Neumann (Unified Instruction & Data Memory) |
+| **Data Bus Width** | 8-bit parallel, tri-state buffered (74HC245) |
+| **Address Space** | 8-bit addressing (up to 256 memory locations) |
+| **Clock Modes** | Manual Single-Step (Debounced) / Free-Running (1 Hz – 1 kHz) / Hardware Halt |
+| **Logic Family** | High-Speed CMOS (74HC Series) |
+| **Control Logic** | Microcoded via parallel EEPROMs (AT28C16 / AT28C64) |
+| **Instruction Set** | Custom RISC-like 8-bit ISA (Fetch-Decode-Execute pipeline) |
+
+---
+
+## System Block Diagram
+
++-----------------------------------+
+          |          CONTROL UNIT (CU)        |
+          |   (Microcode EEPROMs / Decoders)  |
+          +--+-----+-----+-----+-----+-----+--+
+             |     |     |     |     |     |  (Control Lines)
+             v     v     v     v     v     v
+          +-----------------------------------+
+          |          SHARED DATA BUS          |
+          +--+-----+-----+-----+-----+-----+--+
+             |     |     |     |     |     |
++------------+     |     |     |     |     +------------+
+|                  v     |     v     v                  |
+v               +----+   |   +----+----+                v
++-------+           | MAR|   |   | PC |   |              +------+
+| Clock |           +--+-+   |   +--+-+   |              | Output|
++-------+              |     |      |     |              | Reg  |
+v     v      v     |              +------+
++----------+ +-----+  |
+|   RAM    | | CIR |  |
++----+-----+ +--+--+  |
+|          |     |
+v          v     |
++----+----+  (Opcode) |
+|   MDR   |-----+     |
++----+----+           |
+|                |
++-------+--------+
+|
+v
++------------------+
+|  ALU / Accumulator|
++------------------+
 ---
 
 ## Modular Subsystem Hierarchy
